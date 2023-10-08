@@ -1,0 +1,17 @@
+import shap
+shap_test = shap.TreeExplainer(model_cat_down5).shap_values(features_downsampled_train)
+shap.summary_plot(shap_test, features_downsampled_train,
+                      max_display=30, auto_size_plot=True)
+# Сделам таблицу признаков
+features = features_downsampled_train
+X_importance = features_downsampled_train
+
+# Explain model predictions using shap library:
+explainer = shap.TreeExplainer(model_cat_down5)
+shap_values = explainer.shap_values(X_importance)
+
+vals= np.abs(shap_values).mean(0)
+
+feature_importance = pd.DataFrame(list(zip(features.columns, sum(vals))), columns=['col_name','feature_importance_vals'])
+feature_importance.sort_values(by=['feature_importance_vals'], ascending=False,inplace=True)
+feature_importance.head(90)
